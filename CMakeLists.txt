@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.28.0)
+set(PROJECT_NAME NDO)
+set(PROJECT_VERSION_MAJOR 0)
+set(PROJECT_VERSION_MINOR 0)
+project(${PROJECT_NAME})
+add_executable(${PROJECT_NAME} main.cpp)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
