@@ -28,17 +28,17 @@ class maybe {
         if (has_value()) {
             return std::get<T>(var);
         }
-        throw std::runtime_error("maybe just_safe exception");
+        throw std::runtime_error("maybe just_or_throw exception");
     };
 
     T& just_or_throw() {
         if (has_value()) {
             return std::get<T>(var);
         }
-        throw std::runtime_error("maybe just_safe exception");
+        throw std::runtime_error("maybe just_or_throw exception");
     };
 
-    T just_or_default() {
+    T just_or_default() const {
         if (has_value()) {
             return std::get<T>(var);
         }
@@ -57,12 +57,12 @@ class maybe {
     };
 
     template <ndo::ndo_callable F>
-    [[nodiscard]] constexpr decltype(auto) map_or_default(F&& f) {
+    [[nodiscard]] constexpr decltype(auto) map_or_default(F&& f) const noexcept {
         return std::invoke(f, std::forward<T>(just_or_default()));
     }
 
     template <typename Target, ndo::ndo_callable F>
-    [[nodiscard]] constexpr decltype(auto) map_or_default(F&& f) {
+    [[nodiscard]] constexpr decltype(auto) map_or_default(F&& f) const noexcept {
         return static_cast<Target>(std::invoke(f, std::forward<T>(just_or_default())));
     }
 
