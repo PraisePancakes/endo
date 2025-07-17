@@ -30,5 +30,11 @@ int main(int argc, char** argv) {
     constexpr static ndo::maybe<int> may4{10};
     static_assert(may4.has_value());
 
+    static_assert(ndo::ndo_callable<decltype([](bool x) { return 4; })>);
+    static_assert(ndo::ndo_callable<std::function<int(char)>>);
+
+    ndo::maybe<int> may5{10};
+    auto v = may5.map([](int x) { return "hi"; });
+
     return 0;
 }

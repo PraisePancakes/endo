@@ -3,14 +3,6 @@
 
 #include "visitor.hpp"
 namespace ndo {
-template <typename T>
-struct maybe;
-
-template <typename T>
-struct is_maybe : std::false_type {};
-
-template <typename T>
-struct is_maybe<maybe<T>> : std::true_type {};
 
 struct NDO_NOTHING_TYPE {
 };
@@ -25,27 +17,49 @@ class maybe {
     constexpr maybe(const T& o) : var(o.var) {};
 
     explicit constexpr operator bool() const {
-        return std::visit(visitor{[](NDO_NOTHING_TYPE NT) { return false; }, [](T lit) { return true; }}, var);
+        return std::visit(visitor{[](NDO_NOTHING_TYPE) { return false; }, [](T) { return true; }}, var);
     };
 
     constexpr bool has_value() const {
         return (*this).operator bool();
     };
 
-    const T& just() const {
+    const T& just_or_throw() const {
         if (has_value()) {
             return std::get<T>(var);
         }
         throw std::runtime_error("maybe just_safe exception");
     };
 
-    T& just() {
+    T& just_or_throw() {
         if (has_value()) {
             return std::get<T>(var);
         }
         throw std::runtime_error("maybe just_safe exception");
+    };
+
+    T& just_or_default() const {
+        if (has_value()) {
+            return std::get<T>(var);
+        }
+        return {};
+    };
+    // a -> (a , f a) -> b
+
+    template <ndo::ndo_callable F>
+    decltype(auto) map(F&& f) {
+        return f(just_or_throw());
+    };
+
+    template <typename F, typename U>
+    maybe<U> and_then(F&& f) {
+        if (has_value()) {
+            return maybe<U>{};
+        }
+        return maybe<U>{f(just_or_throw())};
     };
 
     ~maybe() = default;
 };
+
 };  // namespace ndo
