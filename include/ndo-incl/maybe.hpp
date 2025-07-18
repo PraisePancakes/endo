@@ -24,21 +24,21 @@ class maybe {
         return (*this).operator bool();
     };
 
-    const T& just_or_throw() const {
+    constexpr T& just_or_throw() const {
         if (has_value()) {
             return std::get<T>(var);
         }
         throw std::runtime_error("maybe just_or_throw exception");
     };
 
-    T& just_or_throw() {
+    constexpr T& just_or_throw() {
         if (has_value()) {
             return std::get<T>(var);
         }
         throw std::runtime_error("maybe just_or_throw exception");
     };
 
-    T just_or_default() const {
+    constexpr T just_or_default() const {
         if (has_value()) {
             return std::get<T>(var);
         }
@@ -66,13 +66,12 @@ class maybe {
         return static_cast<Target>(std::invoke(f, std::forward<T>(just_or_default())));
     }
 
-    template <typename F, typename U>
-    maybe<U> and_then(F&& f) {
-        if (has_value()) {
-            return maybe<U>{};
-        }
-        return maybe<U>{f(just_or_throw())};
-    };
+    template <typename F>
+    constexpr auto and_then(F&& f) {
+        using U = std::invoke_result_t<F, T>;
+        static_assert(!std::is_same_v<U, void> && !std::is_same_v<T, void>, "and_then is ill-formed with I/O side effects, no useable return type");
+        return maybe<U>{std::invoke(std::forward<F>(f), just_or_default())};
+    }
 
     ~maybe() = default;
 };
