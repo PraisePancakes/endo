@@ -36,12 +36,13 @@ void test_maybe() {
 
     ndo::maybe<std::vector<int>> may7{{56, 1, 2, 3}};
 
+    may7 = ndo::nothing<std::vector<int>>();
     auto lam3 = [](std::vector<int> v) {
-        return std::accumulate(v.begin(), v.end(), v[0]);
+        return ndo::nothing<int>();
     };
 
     auto lam4 = [](int v) {
-        return ndo::ndo_null;
+        return ndo::maybe<int>{4};
     };
 
     auto v = may7.and_then(lam3).and_then(lam4);

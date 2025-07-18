@@ -4,44 +4,55 @@
 #include "visitor.hpp"
 namespace ndo {
 
-struct ndo_null_t {
-    ndo_null_t() = default;
-    ndo_null_t(ndo_null_t&&) = default;
-    ndo_null_t(const ndo_null_t&) = default;
-    ~ndo_null_t() = default;
-};
+template <typename T>
+class maybe;
 
-inline constexpr ndo_null_t ndo_null{};
+template <typename T>
+struct is_maybe : std::false_type {};
+
+template <typename T>
+struct is_maybe<maybe<T>> : std::true_type {};
 
 template <typename T>
 class maybe {
     T var;
     bool active;
+    void destroy() {
+        if (active) {
+            active = false;
+            (*reinterpret_cast<const T*>(&var)).~T();
+        }
+    };
 
    public:
+    using value_type = T;
     constexpr maybe() : var(), active(false) {};
-    constexpr maybe(T&& v) : var(std::move(v)), active(true) {};
-    constexpr maybe(const T& o) : var(o.var), active(true) {};
-    constexpr maybe(const maybe<T>& o) : var(o.var), active(o.active) {};
-    constexpr maybe& operator=(ndo_null_t null) noexcept {
-        std::destroy_at(std::addressof(var));
-        active = false;
+    constexpr maybe(T&& v) : var(), active(true) {
+        std::construct_at(&var, std::move(v));
     };
+    constexpr maybe(const T& o) : var(), active(true) {
+        std::construct_at(&var, o);
+    };
+    constexpr maybe(const maybe<T>& o) : var(), active(o.active) { std::construct_at(&var, std::move(o.var)); };
     constexpr maybe& operator=(const T& o) {
-        var = o;
+        destroy();
+        std::construct_at(&var, o);
         active = true;
     };
     constexpr maybe& operator=(T&& o) {
-        var = std::move(o);
+        destroy();
+        std::construct_at(&var, std::move(o));
         active = true;
     }
     constexpr maybe& operator=(const maybe<T>& o) {
-        var = o.var;
+        destroy();
+        std::construct_at(&var, std::move(o.var));
         active = o.active;
+        return *this;
     };
 
     explicit constexpr operator bool() const {
-        return active && (!std::is_same_v<T, ndo_null_t>);
+        return active;
     };
 
     constexpr bool has_value() const {
@@ -93,14 +104,19 @@ class maybe {
     template <typename F>
     constexpr auto and_then(F&& f) {
         using U = std::invoke_result_t<F, T>;
-        static_assert(!std::is_same_v<U, void> || !std::is_same_v<T, void>, "and_then has ill-formed tendencies with no transformable return type");
+        static_assert(is_maybe<U>::value, "invoked result must be a maybe");
         if (has_value()) {
-            return maybe<U>{std::invoke(std::forward<F>(f), just_or_default())};
+            return std::invoke(std::forward<F>(f), just_or_default());
         }
-        return maybe<U>();
+        return maybe<typename U::value_type>();
     }
 
     ~maybe() = default;
+};
+
+template <typename T>
+maybe<T> nothing() {
+    return {};
 };
 
 };  // namespace ndo
