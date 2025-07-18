@@ -16,16 +16,32 @@ inline constexpr ndo_null_t ndo_null{};
 template <typename T>
 class maybe {
     T var;
-    bool engaged;
+    bool active;
 
    public:
-    constexpr maybe() : var(), engaged(false) {};
-    constexpr maybe(T&& v) : var(std::move(v)), engaged(true) {};
-    constexpr maybe(const T& o) : var(o.var), engaged(true) {};
-    constexpr maybe(const maybe<T>& o) : var(o.var), engaged(o.engaged) {};
+    constexpr maybe() : var(), active(false) {};
+    constexpr maybe(T&& v) : var(std::move(v)), active(true) {};
+    constexpr maybe(const T& o) : var(o.var), active(true) {};
+    constexpr maybe(const maybe<T>& o) : var(o.var), active(o.active) {};
+    constexpr maybe& operator=(ndo_null_t null) noexcept {
+        std::destroy_at(std::addressof(var));
+        active = false;
+    };
+    constexpr maybe& operator=(const T& o) {
+        var = o;
+        active = true;
+    };
+    constexpr maybe& operator=(T&& o) {
+        var = std::move(o);
+        active = true;
+    }
+    constexpr maybe& operator=(const maybe<T>& o) {
+        var = o.var;
+        active = o.active;
+    };
 
     explicit constexpr operator bool() const {
-        return engaged && (!std::is_same_v<T, ndo_null_t>);
+        return active && (!std::is_same_v<T, ndo_null_t>);
     };
 
     constexpr bool has_value() const {
