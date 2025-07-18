@@ -7,16 +7,21 @@ namespace ndo::test {
 
 void test_maybe() {
     // constexpr tests
-    constexpr static ndo::maybe<int> may;
-    static_assert(!may);
 
-    constexpr static ndo::maybe<int> may2;
+    constexpr ndo::maybe<int> may;
+    static_assert(!may);
+    static_assert(ndo::is_maybe<decltype(may)>);
+    static_assert(ndo::is_maybe<ndo::maybe<ndo::ndo_null_t>>);
+    static_assert(ndo::is_nothing<ndo::maybe<ndo::ndo_null_t>>);
+    static_assert(!ndo::is_nothing<ndo::maybe<int>>);
+
+    constexpr ndo::maybe<int> may2;
     static_assert(!may2.has_value());
 
-    constexpr static ndo::maybe<int> may3{10};
+    constexpr ndo::maybe<int> may3{10};
     static_assert(may3);
 
-    constexpr static ndo::maybe<int> may4{10};
+    constexpr ndo::maybe<int> may4{10};
     static_assert(may4.has_value());
 
     // constexpr map_or_default
@@ -44,7 +49,7 @@ void test_maybe() {
         return ndo::ndo_nothing;
     };
 
-    auto v = may7.and_then(lam3).and_then(lam4).and_then(lam4);
+    auto v = may7.and_then(lam3).and_then(lam4).and_then(lam4);  // nothing type
 
     std::cout << std::boolalpha << v.has_value() << std::endl;
 };

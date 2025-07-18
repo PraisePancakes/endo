@@ -124,4 +124,24 @@ class maybe<ndo_null_t> {
     };
 };
 
+namespace internal {
+template <typename T>
+struct is_nothing_trait : std::false_type {};
+
+template <>
+struct is_nothing_trait<maybe<ndo_null_t>> : std::true_type {};
+
+template <typename T>
+struct is_maybe_trait : std::false_type {};
+
+template <typename T>
+struct is_maybe_trait<maybe<T>> : std::true_type {};
+}  // namespace internal
+
+template <typename T>
+concept is_maybe = internal::is_maybe_trait<std::decay_t<T>>::value;
+
+template <typename T>
+concept is_nothing = internal::is_nothing_trait<std::decay_t<T>>::value;
+
 };  // namespace ndo
