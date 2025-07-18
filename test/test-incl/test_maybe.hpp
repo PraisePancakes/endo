@@ -36,16 +36,15 @@ void test_maybe() {
 
     ndo::maybe<std::vector<int>> may7{{56, 1, 2, 3}};
 
-    may7 = ndo::nothing<std::vector<int>>();
     auto lam3 = [](std::vector<int> v) {
-        return ndo::nothing<int>();
+        return 4;
     };
 
     auto lam4 = [](int v) {
-        return ndo::maybe<int>{4};
+        return ndo::ndo_nothing;
     };
 
-    auto v = may7.and_then(lam3).and_then(lam4);
+    auto v = may7.and_then(lam3).and_then(lam4).and_then(lam4);
 
     std::cout << std::boolalpha << v.has_value() << std::endl;
 };
