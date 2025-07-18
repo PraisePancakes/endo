@@ -41,11 +41,12 @@ void test_maybe() {
     };
 
     auto lam4 = [](int v) {
-        return (char)(v);
+        return ndo::ndo_null;
     };
 
     auto v = may7.and_then(lam3).and_then(lam4);
-    std::cout << v.just_or_throw() << std::endl;
+
+    std::cout << std::boolalpha << v.has_value() << std::endl;
 };
 
 }  // namespace ndo::test
