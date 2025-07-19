@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include <variant>
 
 #include "visitor.hpp"
@@ -72,6 +73,16 @@ class maybe {
 
         return maybe<result_t>();
     };
+
+    template <typename F>
+    [[nodiscard]] constexpr auto and_then_safe(F&& f) {
+        using result_t = std::decay_t<std::invoke_result_t<F, T>>;
+        if (has_value()) {
+            return maybe<result_t>({std::invoke(std::forward<F>(f), std::forward<T>(just_or_default()))});
+        }
+        return maybe<result_t>();
+    };
+
     ~maybe() = default;
 };
 
