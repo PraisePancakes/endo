@@ -45,6 +45,13 @@ class maybe {
         return {};
     };
 
+    constexpr T just_or(const T& v) {
+        if (has_value()) {
+            return just_or_throw();
+        }
+        return v;
+    };
+
     template <typename F>
     [[nodiscard]] constexpr decltype(auto) map_or_throw(F&& f) {
         return std::invoke(f, std::forward<T>(just_or_throw()));
@@ -108,6 +115,10 @@ class maybe<ndo_null_t> {
 
     constexpr ndo_null_t just_or_default() const {
         return ndo_nothing;
+    };
+
+    constexpr ndo_null_t just_or(void) {
+       return ndo_nothing;
     };
 
     template <typename F>
