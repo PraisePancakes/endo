@@ -18,5 +18,15 @@ struct compositor {
             return _f(_g(std::forward<decltype(x)>(x)));
         };
     };
+
+    // x -> (g(f(x))) => y
+    template <typename F, typename G, typename... Fs>
+    [[nodiscard]] constexpr static decltype(auto) thread_first(F&& f, G&& g, Fs&&... fs) {
+        return compose(compose(std::forward<Fs>(fs)..., std::forward<G>(g)), std::forward<F>(f));
+    };
+
+    
+
+
 };
 };  // namespace ndo
