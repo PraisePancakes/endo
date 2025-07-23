@@ -7,5 +7,6 @@ int main(int argc, char** argv) {
     ndo::test::test_function_traits();
     ndo::test::test_either();
     ndo::test::test_compositor();
+    ndo::test::test_curry();
     return 0;
 }
