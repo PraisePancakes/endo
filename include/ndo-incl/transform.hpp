@@ -1,5 +1,8 @@
 #pragma once
+#include <array>
 #include <iostream>
+#include <tuple>
+
 namespace ndo {
 
 template <typename Container, typename F>
@@ -12,4 +15,15 @@ template <typename Container, typename F>
     return ret;
 };
 
-};  // namespace ndo
+template <std::integral N, N a, N b>
+[[nodiscard]] constexpr auto spread() noexcept {
+    std::array<N, b - a + 1> ret{};
+    size_t index = 0;
+    for (N i = a; i < b; i++) {
+        ret[index] = i;
+        index++;
+    }
+    return ret;
+};
+
+}  // namespace ndo
