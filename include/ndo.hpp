@@ -1,3 +1,4 @@
+#include "ndo-incl/combinator.hpp"
 #include "ndo-incl/compositor.hpp"
 #include "ndo-incl/curry.hpp"
 #include "ndo-incl/either.hpp"

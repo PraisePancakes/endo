@@ -9,5 +9,6 @@ int main(int argc, char** argv) {
     ndo::test::test_compositor();
     ndo::test::test_curry();
     ndo::test::test_uncurry();
+    ndo::test::test_combinator();
     return 0;
 }
