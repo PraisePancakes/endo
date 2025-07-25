@@ -9,7 +9,7 @@ Y ≡ λf.((λf'.f(λx.f'f'x)) (λf'.f(λx.f'f'x)) )
 
 namespace internal {
 template <typename F>
-class y_ready {
+class [[nodiscard]] y_ready {
     F f;
 
    public:
