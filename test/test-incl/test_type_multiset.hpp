@@ -9,14 +9,23 @@ void test_type_multiset() {
     static_assert(std::is_same_v<ndo::type_multiset<int, char, bool>::get<2>, bool>);
     static_assert(std::is_same_v<ndo::type_multiset<int, char, bool>::get<1>, char>);
     static_assert(!std::is_same_v<ndo::type_multiset<int, char, bool>::get<1>, int>);
-    static_assert(std::is_same_v<ndo::type_multiset<int, char, bool>::append<float>, ndo::type_multiset<int, char, bool, float>>);
-    static_assert(!std::is_same_v<ndo::type_multiset<int, char, bool>::append<float>, ndo::type_multiset<int, char, bool, int>>);
-    static_assert(std::is_same_v<ndo::type_multiset<int, char, bool>::prepend<float>, ndo::type_multiset<float, int, char, bool>>);
-    static_assert(!std::is_same_v<ndo::type_multiset<int, char, bool>::prepend<float>, ndo::type_multiset<bool, int, char, bool>>);
+    static_assert(std::is_same_v<ndo::type_multiset<int, char, bool>::append<float>::type, ndo::type_multiset<int, char, bool, float>>);
+    static_assert(!std::is_same_v<ndo::type_multiset<int, char, bool>::append<float>::type, ndo::type_multiset<int, char, bool, int>>);
+    static_assert(std::is_same_v<ndo::type_multiset<int, char, bool>::prepend<float>::type, ndo::type_multiset<float, int, char, bool>>);
+    static_assert(!std::is_same_v<ndo::type_multiset<int, char, bool>::prepend<float>::type, ndo::type_multiset<bool, int, char, bool>>);
 
     using from_tup = std::tuple<int, char, bool>;
+    using from_tup1 = std::tuple<char, bool, float>;
 
     static_assert(!ndo::type_multiset<from_tup>::contains<float>);
     static_assert(ndo::type_multiset<from_tup>::contains<int>);
+    using t = ndo::type_multiset<from_tup, from_tup1>;
+    static_assert(std::is_same_v<t::get<0>, int>);
+    static_assert(std::is_same_v<t::get<1>, char>);
+    static_assert(std::is_same_v<t::get<2>, bool>);
+    static_assert(std::is_same_v<t::get<3>, char>);
+    static_assert(std::is_same_v<t::get<4>, bool>);
+    static_assert(std::is_same_v<t::get<5>, float>);
+    static_assert(std::is_same_v<t::pop_front, ndo::type_multiset<char, bool, char, bool, float>>);
 };
 }  // namespace ndo::test
