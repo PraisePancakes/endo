@@ -52,6 +52,16 @@ class type_multiset {
     using get = std::tuple_element_t<I, std::tuple<Ts...>>;
 
     template <typename T>
+    constexpr static auto index = []() {
+        return ((std::is_same_v<T, Ts> || ...) ? (([]() {
+            signed i = 0;
+            (... && (!std::is_same_v<T, Ts> && ++i));
+            return i;
+        }()))
+                                               : -1);
+    }();
+
+    template <typename T>
     constexpr static bool contains = (std::is_same_v<T, Ts> || ...);
 
     using pop_front = typename internal::pop_front_type_multiset<type_multiset<Ts...>>::type;

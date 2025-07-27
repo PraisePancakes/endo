@@ -27,5 +27,10 @@ void test_type_multiset() {
     static_assert(std::is_same_v<t::get<4>, bool>);
     static_assert(std::is_same_v<t::get<5>, float>);
     static_assert(std::is_same_v<t::pop_front, ndo::type_multiset<char, bool, char, bool, float>>);
+
+    constexpr auto idx = ndo::type_multiset<int, char>::index<bool>;
+    constexpr auto idx2 = ndo::type_multiset<int, char>::index<int>;
+    static_assert(idx == -1);
+    static_assert(idx2 == 0);
 };
 }  // namespace ndo::test
