@@ -7,29 +7,19 @@ template <typename... Ts>
 class type_multiset;
 
 template <template <typename...> class Ts, typename... T1>
-struct type_multiset<Ts<T1...>> : public type_multiset<T1...> {};
+struct type_multiset<Ts<T1...>> : public type_multiset<T1...> {
+};
 
 template <template <typename...> class Ts, typename... T1, typename... T2>
 struct type_multiset<Ts<T1...>, Ts<T2...>> : public type_multiset<T1..., T2...> {};
 
-namespace internal {
-template <typename T>
-struct pop_front_type_multiset;
-
-template <typename First, typename... Rest>
-struct pop_front_type_multiset<type_multiset<First, Rest...>> {
-    using type = type_multiset<Rest...>;
-};
-
 template <>
-struct pop_front_type_multiset<type_multiset<>> {
-    using type = type_multiset<>;
-};
-}  // namespace internal
+struct type_multiset<> {};
 
 template <typename... Ts>
 class type_multiset {
    public:
+    using this_type = type_multiset<Ts...>;
     constexpr static std::size_t cardinality = sizeof...(Ts);
 
     template <typename... Ls>
@@ -64,7 +54,19 @@ class type_multiset {
     template <typename T>
     constexpr static bool contains = (std::is_same_v<T, Ts> || ...);
 
-    using pop_front = typename internal::pop_front_type_multiset<type_multiset<Ts...>>::type;
+    using pop_front = std::conditional_t<
+        (sizeof...(Ts) > 0),
+        decltype([]<std::size_t... i>(std::index_sequence<i...>) {
+            return type_multiset<std::tuple_element_t<i + 1, std::tuple<Ts...>>...>{};
+        }(std::make_index_sequence<sizeof...(Ts) - 1>{})),
+        type_multiset<>>;
+
+    using pop_back = std::conditional_t<
+        (sizeof...(Ts) > 0),
+        decltype([]<std::size_t... i>(std::index_sequence<i...>) {
+            return type_multiset<std::tuple_element_t<i, std::tuple<Ts...>>...>{};
+        }(std::make_index_sequence<sizeof...(Ts) - 1>{})),
+        type_multiset<>>;
 };
 
 }  // namespace ndo

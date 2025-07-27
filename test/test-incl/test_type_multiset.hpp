@@ -32,5 +32,7 @@ void test_type_multiset() {
     constexpr auto idx2 = ndo::type_multiset<int, char>::index<int>;
     static_assert(idx == -1);
     static_assert(idx2 == 0);
+
+    using v = type_multiset<int, char, bool>::pop_back;
 };
 }  // namespace ndo::test
