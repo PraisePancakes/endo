@@ -11,5 +11,6 @@ int main(int argc, char** argv) {
     ndo::test::test_uncurry();
     ndo::test::test_combinator();
     ndo::test::test_transform();
+    ndo::test::test_type_multiset();
     return 0;
 }

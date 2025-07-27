@@ -9,8 +9,9 @@ void test_transform() {
     auto v = ndo::map_from(vec, [](int x) { return x + 2; });
     std::for_each(v.begin(), v.end(), [](int v) { std::cout << v << std::endl; });
 
-    constexpr auto ints = ndo::spread<std::size_t, 1, 10>();
-    static_assert(ints[0] == 1);
-    static_assert(ints[1] == 2);
+    auto ns = ndo::spread(5, 10);
+    for (auto e : ns) {
+        std::cout << e << std::endl;
+    }
 };
 };  // namespace ndo::test

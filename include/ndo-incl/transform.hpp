@@ -15,13 +15,11 @@ template <typename Container, typename F>
     return ret;
 };
 
-template <std::integral N, N a, N b>
-[[nodiscard]] constexpr auto spread() noexcept {
-    std::array<N, b - a + 1> ret{};
-    size_t index = 0;
-    for (N i = a; i < b; i++) {
-        ret[index] = i;
-        index++;
+template <std::integral N = int>
+[[nodiscard]] auto spread(N a, N b) noexcept {
+    std::vector<N> ret;
+    for (N i = a; i <= b; i++) {
+        ret.push_back(i);
     }
     return ret;
 };
