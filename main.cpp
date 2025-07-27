@@ -1,14 +1,6 @@
 #include <iostream>
 
 #include "test/test.hpp"
-template <typename... Ts>
-class bar {};
-
-template <typename... Ts>
-using foo = bar<Ts...>;
-
-template <template <typename...> class T, typename... Ts>
-using foo<T<Ts...>> = bar<Ts...>;
 
 int main(int argc, char** argv) {
     ndo::test::test_maybe();
