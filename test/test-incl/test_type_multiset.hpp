@@ -34,5 +34,7 @@ void test_type_multiset() {
     static_assert(idx2 == 0);
 
     using v = type_multiset<int, char, bool>::pop_back;
+
+    using reverse = type_multiset<int, char, bool>::reverse;
 };
 }  // namespace ndo::test

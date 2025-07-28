@@ -67,6 +67,12 @@ class type_multiset {
             return type_multiset<std::tuple_element_t<i, std::tuple<Ts...>>...>{};
         }(std::make_index_sequence<sizeof...(Ts) - 1>{})),
         type_multiset<>>;
+
+    using reverse = std::conditional_t<
+        (sizeof...(Ts) > 0),
+        decltype([]<std::size_t... i>(std::index_sequence<i...>)
+                     -> type_multiset<std::tuple_element_t<sizeof...(Ts) - 1 - i, std::tuple<Ts...>>...>{}(std::make_index_sequence<sizeof...(Ts)>{})),
+        type_multiset<>>;
 };
 
 }  // namespace ndo

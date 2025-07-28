@@ -17,7 +17,7 @@ class [[nodiscard]] y_ready {
     template <typename... Args>
     constexpr decltype(auto) operator()(Args&&... args) noexcept {
         return f(*this, std::forward<Args>(args)...);
-    };
+    }
     ~y_ready() = default;
 };
 }  // namespace internal

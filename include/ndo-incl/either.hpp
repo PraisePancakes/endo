@@ -33,7 +33,6 @@ class either {
         return *this;
     };
     either& operator=(const Right& r) {
-        right = r;
         return *this;
     };
 
@@ -72,12 +71,12 @@ class either {
     template <typename F>
     [[nodiscard]] constexpr decltype(auto) and_then(F&& f) {
         return right.and_then(std::forward<F>(f));
-    };
+    }
 
     template <typename F>
     [[nodiscard]] constexpr decltype(auto) and_then_safe(F&& f) {
         return right.and_then_safe(std::forward<F>(f));
-    };
+    }
 
     ~either() = default;
 };

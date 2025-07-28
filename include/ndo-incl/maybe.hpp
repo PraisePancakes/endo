@@ -43,23 +43,23 @@ class maybe {
             return std::get<T>(value);
         }
         return {};
-    };
+    }
 
     constexpr T just_or(const T& v) {
         if (has_value()) {
             return just_or_throw();
         }
         return v;
-    };
+    }
 
     template <typename F>
     [[nodiscard]] constexpr decltype(auto) map_or_throw(F&& f) {
         return std::invoke(f, std::forward<T>(just_or_throw()));
-    };
+    }
     template <typename Target, typename F>
     [[nodiscard]] constexpr decltype(auto) map_or_throw(F&& f) {
         return static_cast<Target>(std::invoke(f, std::forward<T>(just_or_throw())));
-    };
+    }
 
     template <typename F>
     [[nodiscard]] constexpr decltype(auto) map_or_default(F&& f) const noexcept {
@@ -79,7 +79,7 @@ class maybe {
         }
 
         return maybe<result_t>();
-    };
+    }
 
     template <typename F>
     [[nodiscard]] constexpr auto and_then_safe(F&& f) {
@@ -88,7 +88,7 @@ class maybe {
             return maybe<result_t>({std::invoke(std::forward<F>(f), std::forward<T>(just_or_default()))});
         }
         return maybe<result_t>();
-    };
+    }
 
     ~maybe() = default;
 };
@@ -124,11 +124,11 @@ class maybe<ndo_null_t> {
     template <typename F>
     [[nodiscard]] constexpr decltype(auto) map_or_throw(F&& f) {
         return ndo_nothing;
-    };
+    }
     template <typename Target, typename F>
     [[nodiscard]] constexpr decltype(auto) map_or_throw(F&& f) {
         return ndo_nothing;
-    };
+    }
 
     template <typename F>
     [[nodiscard]] constexpr decltype(auto) map_or_default(F&& f) const noexcept {
@@ -143,7 +143,7 @@ class maybe<ndo_null_t> {
     template <typename F>
     [[nodiscard]] constexpr auto and_then(F&& f) {
         return maybe<ndo_null_t>();
-    };
+    }
 };
 
 namespace internal {
