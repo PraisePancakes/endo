@@ -54,15 +54,28 @@ class type_multiset {
 
     using pop_front = decltype([]<std::size_t... i>(std::index_sequence<i...>) {
         return std::type_identity<type_multiset<this_type__::get<i + 1>...>>{};
-    }(std::make_index_sequence<sizeof...(Ts) - 1>{}))::type;
+    }(std::make_index_sequence<this_type__::cardinality - 1>{}))::type;
 
     using pop_back = decltype([]<std::size_t... i>(std::index_sequence<i...>) {
         return std::type_identity<type_multiset<this_type__::get<i>...>>{};
-    }(std::make_index_sequence<sizeof...(Ts) - 1>{}))::type;
+    }(std::make_index_sequence<this_type__::cardinality - 1>{}))::type;
 
     using reverse = decltype([]<std::size_t... i>(std::index_sequence<i...>) {
-        return std::type_identity<type_multiset<this_type__::get<sizeof...(Ts) - 1 - i>...>>{};
-    }(std::make_index_sequence<sizeof...(Ts)>{}))::type;
+        return std::type_identity<type_multiset<this_type__::get<this_type__::cardinality - 1 - i>...>>{};
+    }(std::make_index_sequence<this_type__::cardinality>{}))::type;
+
+    struct splicer {
+        template <std::size_t i>
+        struct at {
+            using left = decltype([]<std::size_t... is>(std::index_sequence<is...>) {
+                return std::type_identity<type_multiset<this_type__::get<is>...>>{};
+            }(std::make_index_sequence<i>{}))::type;
+
+            using right = decltype([]<std::size_t... is>(std::index_sequence<is...>) {
+                return std::type_identity<type_multiset<this_type__::get<i + is>...>>{};
+            }(std::make_index_sequence<this_type__::cardinality - i>{}))::type;
+        };
+    };
 };
 
 }  // namespace ndo
