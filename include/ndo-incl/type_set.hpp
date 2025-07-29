@@ -13,9 +13,6 @@ struct type_multiset<Ts<T1...>> : public type_multiset<T1...> {
 template <template <typename...> class Ts, typename... T1, typename... T2>
 struct type_multiset<Ts<T1...>, Ts<T2...>> : public type_multiset<T1..., T2...> {};
 
-template <>
-struct type_multiset<> {};
-
 template <typename... Ts>
 class type_multiset {
    public:
@@ -54,25 +51,17 @@ class type_multiset {
     template <typename T>
     constexpr static bool contains = (std::is_same_v<T, Ts> || ...);
 
-    using pop_front = std::conditional_t<
-        (sizeof...(Ts) > 0),
-        decltype([]<std::size_t... i>(std::index_sequence<i...>) {
-            return type_multiset<std::tuple_element_t<i + 1, std::tuple<Ts...>>...>{};
-        }(std::make_index_sequence<sizeof...(Ts) - 1>{})),
-        type_multiset<>>;
+    using pop_front = decltype([]<std::size_t... i>(std::index_sequence<i...>) {
+        return std::type_identity<type_multiset<std::tuple_element_t<i + 1, std::tuple<Ts...>>...>>{};
+    }(std::make_index_sequence<sizeof...(Ts) - 1>{}))::type;
 
-    using pop_back = std::conditional_t<
-        (sizeof...(Ts) > 0),
-        decltype([]<std::size_t... i>(std::index_sequence<i...>) {
-            return type_multiset<std::tuple_element_t<i, std::tuple<Ts...>>...>{};
-        }(std::make_index_sequence<sizeof...(Ts) - 1>{})),
-        type_multiset<>>;
+    using pop_back = decltype([]<std::size_t... i>(std::index_sequence<i...>) {
+        return std::type_identity<type_multiset<std::tuple_element_t<i, std::tuple<Ts...>>...>>{};
+    }(std::make_index_sequence<sizeof...(Ts) - 1>{}))::type;
 
-    using reverse = std::conditional_t<
-        (sizeof...(Ts) > 0),
-        decltype([]<std::size_t... i>(std::index_sequence<i...>)
-                     -> type_multiset<std::tuple_element_t<sizeof...(Ts) - 1 - i, std::tuple<Ts...>>...>{}(std::make_index_sequence<sizeof...(Ts)>{})),
-        type_multiset<>>;
+    using reverse = decltype([]<std::size_t... i>(std::index_sequence<i...>) {
+        return std::type_identity<type_multiset<std::tuple_element_t<sizeof...(Ts) - 1 - i, std::tuple<Ts...>>...>>{};
+    }(std::make_index_sequence<sizeof...(Ts)>{}))::type;
 };
 
 }  // namespace ndo
