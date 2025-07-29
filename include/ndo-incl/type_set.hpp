@@ -4,17 +4,64 @@
 
 namespace ndo {
 template <typename... Ts>
-class type_multiset;
+class [[nodiscard]] type_multiset;
 
 template <template <typename...> class Ts, typename... T1>
-struct type_multiset<Ts<T1...>> : public type_multiset<T1...> {
+struct [[nodiscard]] type_multiset<Ts<T1...>> : public type_multiset<T1...> {
 };
 
 template <template <typename...> class Ts, typename... T1, typename... T2>
-struct type_multiset<Ts<T1...>, Ts<T2...>> : public type_multiset<T1..., T2...> {};
+struct [[nodiscard]] type_multiset<Ts<T1...>, Ts<T2...>> : public type_multiset<T1..., T2...> {};
+
+template <>
+struct type_multiset<> {
+    using this_type__ = type_multiset<>;
+
+   public:
+    constexpr static std::size_t cardinality = 0;
+    template <typename... Ls>
+    struct append {
+        using type = type_multiset<Ls...>;
+    };
+
+    template <template <typename...> class T, typename... Us>
+    struct append<T<Us...>> : append<Us...> {};
+
+    template <typename... Ls>
+    struct prepend {
+        using type = type_multiset<Ls...>;
+    };
+
+    template <template <typename...> class T, typename... Us>
+    struct prepend<T<Us...>> : prepend<Us...> {};
+
+    template <std::size_t I>
+    using get = std::tuple_element_t<I, std::tuple<>>;
+
+    template <typename T>
+    constexpr static auto index = -1;
+
+    template <typename T>
+    constexpr static bool contains = false;
+
+    using pop_front = this_type__;
+
+    using pop_back = this_type__;
+
+    using reverse = this_type__;
+
+    struct splicer {
+        template <std::size_t i>
+        struct at {
+            static_assert(i < this_type__::cardinality, "splice index out of range of type set");
+            using left = this_type__;
+            using right = this_type__;
+        };
+    };
+};
 
 template <typename... Ts>
-class type_multiset {
+class [[nodiscard]] type_multiset {
     using this_type__ = type_multiset<Ts...>;
 
    public:
@@ -67,6 +114,7 @@ class type_multiset {
     struct splicer {
         template <std::size_t i>
         struct at {
+            static_assert(i < this_type__::cardinality, "splice index out of range of type set");
             using left = decltype([]<std::size_t... is>(std::index_sequence<is...>) {
                 return std::type_identity<type_multiset<this_type__::get<is>...>>{};
             }(std::make_index_sequence<i>{}))::type;

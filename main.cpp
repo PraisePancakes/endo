@@ -2,6 +2,9 @@
 
 #include "test/test.hpp"
 
+template <typename... Ts>
+struct look {};
+
 int main(int argc, char** argv) {
     ndo::test::test_maybe();
     ndo::test::test_function_traits();
@@ -12,5 +15,6 @@ int main(int argc, char** argv) {
     ndo::test::test_combinator();
     ndo::test::test_transform();
     ndo::test::test_type_multiset();
+    
     return 0;
 }
