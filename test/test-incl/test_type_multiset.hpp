@@ -35,6 +35,6 @@ void test_type_multiset() {
 
     using v = type_multiset<int, char, bool>::pop_back;
 
-    using reverse = type_multiset<int>::reverse;
+    using reverse = type_multiset<int, char, float>::reverse;
 };
 }  // namespace ndo::test

@@ -15,8 +15,9 @@ struct type_multiset<Ts<T1...>, Ts<T2...>> : public type_multiset<T1..., T2...> 
 
 template <typename... Ts>
 class type_multiset {
+    using this_type__ = type_multiset<Ts...>;
+
    public:
-    using this_type = type_multiset<Ts...>;
     constexpr static std::size_t cardinality = sizeof...(Ts);
 
     template <typename... Ls>
@@ -52,15 +53,15 @@ class type_multiset {
     constexpr static bool contains = (std::is_same_v<T, Ts> || ...);
 
     using pop_front = decltype([]<std::size_t... i>(std::index_sequence<i...>) {
-        return std::type_identity<type_multiset<std::tuple_element_t<i + 1, std::tuple<Ts...>>...>>{};
+        return std::type_identity<type_multiset<this_type__::get<i + 1>...>>{};
     }(std::make_index_sequence<sizeof...(Ts) - 1>{}))::type;
 
     using pop_back = decltype([]<std::size_t... i>(std::index_sequence<i...>) {
-        return std::type_identity<type_multiset<std::tuple_element_t<i, std::tuple<Ts...>>...>>{};
+        return std::type_identity<type_multiset<this_type__::get<i>...>>{};
     }(std::make_index_sequence<sizeof...(Ts) - 1>{}))::type;
 
     using reverse = decltype([]<std::size_t... i>(std::index_sequence<i...>) {
-        return std::type_identity<type_multiset<std::tuple_element_t<sizeof...(Ts) - 1 - i, std::tuple<Ts...>>...>>{};
+        return std::type_identity<type_multiset<this_type__::get<sizeof...(Ts) - 1 - i>...>>{};
     }(std::make_index_sequence<sizeof...(Ts)>{}))::type;
 };
 
