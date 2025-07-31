@@ -40,6 +40,15 @@ void test_type_multiset() {
     using l = type_multiset<int, char, bool, float>::splicer::at<2>::left;
     using r = type_multiset<int>::splicer::at<0>::right;
 
-    using poop = type_multiset<>::append<int>::type::prepend<bool, char>::type;
+    using from_empty = type_multiset<>::append<int>::type::prepend<bool, char>::type;
+
+    static_assert(type_multiset<int, char, std::string, bool>::contains_from<1, bool>);
+    static_assert(type_multiset<int, char, std::string, bool>::contains_from<0, int>);
+    static_assert(!type_multiset<int, char, std::string, bool>::contains_from<3, int>);
+    static_assert(!type_multiset<int, char, int, bool>::is_unique);
+    static_assert(type_multiset<int, char, bool>::is_unique == true);
+    static_assert(type_multiset<int>::is_unique);
+
+    using fre = type_multiset<char, int, char, bool, int>::unique;
 };
 }  // namespace ndo::test

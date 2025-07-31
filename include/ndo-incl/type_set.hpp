@@ -15,9 +15,15 @@ struct [[nodiscard]] type_multiset<Ts<T1...>, Ts<T2...>> : public type_multiset<
 
 template <>
 struct type_multiset<> {
-    using this_type__ = type_multiset<>;
+    using this_t = type_multiset<>;
 
    public:
+    using pop_front = this_t;
+
+    using pop_back = this_t;
+
+    using reverse = this_t;
+
     constexpr static std::size_t cardinality = 0;
     template <typename... Ls>
     struct append {
@@ -44,28 +50,27 @@ struct type_multiset<> {
     template <typename T>
     constexpr static bool contains = false;
 
-    using pop_front = this_type__;
-
-    using pop_back = this_type__;
-
-    using reverse = this_type__;
+    using as_tuple = std::tuple<>;
+    using as_variant = std::variant<>;
 
     struct splicer {
         template <std::size_t i>
         struct at {
-            static_assert(i < this_type__::cardinality, "splice index out of range of type set");
-            using left = this_type__;
-            using right = this_type__;
+            static_assert(i < this_t::cardinality, "splice index out of range of type set");
+            using left = this_t;
+            using right = this_t;
         };
     };
 };
 
 template <typename... Ts>
 class [[nodiscard]] type_multiset {
-    using this_type__ = type_multiset<Ts...>;
+    using this_t = type_multiset<Ts...>;
 
    public:
     constexpr static std::size_t cardinality = sizeof...(Ts);
+    using as_tuple = std::tuple<Ts...>;
+    using as_variant = std::variant<Ts...>;
 
     template <typename... Ls>
     struct append {
@@ -99,31 +104,52 @@ class [[nodiscard]] type_multiset {
     template <typename T>
     constexpr static bool contains = (std::is_same_v<T, Ts> || ...);
 
+    template <std::size_t idx, typename T>
+    constexpr static bool contains_from = []<std::size_t... i>(std::index_sequence<i...>) {
+        using ts = type_multiset<this_t::get<i + idx>...>;
+        static_assert(idx >= 0 || idx < ts::cardinality, "index out of constexpr range of type set");
+        return ts::template contains<T>;
+    }(std::make_index_sequence<sizeof...(Ts) - idx>{});
+
     using pop_front = decltype([]<std::size_t... i>(std::index_sequence<i...>) {
-        return std::type_identity<type_multiset<this_type__::get<i + 1>...>>{};
-    }(std::make_index_sequence<this_type__::cardinality - 1>{}))::type;
+        return std::type_identity<type_multiset<this_t::get<i + 1>...>>{};
+    }(std::make_index_sequence<this_t::cardinality - 1>{}))::type;
 
     using pop_back = decltype([]<std::size_t... i>(std::index_sequence<i...>) {
-        return std::type_identity<type_multiset<this_type__::get<i>...>>{};
-    }(std::make_index_sequence<this_type__::cardinality - 1>{}))::type;
+        return std::type_identity<type_multiset<this_t::get<i>...>>{};
+    }(std::make_index_sequence<this_t::cardinality - 1>{}))::type;
 
     using reverse = decltype([]<std::size_t... i>(std::index_sequence<i...>) {
-        return std::type_identity<type_multiset<this_type__::get<this_type__::cardinality - 1 - i>...>>{};
-    }(std::make_index_sequence<this_type__::cardinality>{}))::type;
+        return std::type_identity<type_multiset<this_t::get<this_t::cardinality - 1 - i>...>>{};
+    }(std::make_index_sequence<this_t::cardinality>{}))::type;
 
     struct splicer {
         template <std::size_t i>
         struct at {
-            static_assert(i < this_type__::cardinality, "splice index out of range of type set");
+            static_assert(i < this_t::cardinality, "splice index out of range of type set");
             using left = decltype([]<std::size_t... is>(std::index_sequence<is...>) {
-                return std::type_identity<type_multiset<this_type__::get<is>...>>{};
+                return std::type_identity<type_multiset<this_t::get<is>...>>{};
             }(std::make_index_sequence<i>{}))::type;
 
             using right = decltype([]<std::size_t... is>(std::index_sequence<is...>) {
-                return std::type_identity<type_multiset<this_type__::get<i + is>...>>{};
-            }(std::make_index_sequence<this_type__::cardinality - i>{}))::type;
+                return std::type_identity<type_multiset<this_t::get<i + is>...>>{};
+            }(std::make_index_sequence<this_t::cardinality - i>{}))::type;
         };
     };
+
+    constexpr static bool is_unique = []<std::size_t... i>(std::index_sequence<i...>) constexpr {
+        return ((!this_t::contains_from<i + 1, Ts>) && ...);
+    }(std::make_index_sequence<sizeof...(Ts)>{});
+
+
+    using unique = decltype([]<std::size_t... i>(std::index_sequence<i...>) consteval {
+        return std::type_identity<
+            type_multiset<
+                std::conditional_t<
+                    this_t::contains_from<i + 1, this_t::get<i>>,
+                    type_multiset<>,
+                    this_t::get<i>>...>>{};
+    }(std::make_index_sequence<sizeof...(Ts)>{}))::type;
 };
 
 }  // namespace ndo
