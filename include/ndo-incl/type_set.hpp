@@ -103,8 +103,7 @@ class [[nodiscard]] type_multiset {
     using strictly_unique = decltype([](std::tuple<std::type_identity<Ts>...>&& tup) consteval {
         return std::apply([](auto&&... args) {
             return std::tuple_cat([](auto&& arg) {
-                using extract = typename std::remove_reference_t<decltype(arg)>::type;
-                constexpr bool contains_it = this_t::template contains_from<this_t::template index<extract> + 1, extract>;
+                constexpr bool contains_it = this_t::template contains_from<this_t::template index<typename std::remove_reference_t<decltype(arg)>::type> + 1, typename std::remove_reference_t<decltype(arg)>::type>;
                 if constexpr (!contains_it) {
                     return std::make_tuple(std::forward<decltype(arg)>(arg));
                 } else {
