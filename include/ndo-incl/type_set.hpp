@@ -7,34 +7,11 @@ namespace ndo {
 template <typename... Ts>
 class [[nodiscard]] type_multiset;
 
-namespace internal {
-template <typename... Ts>
-struct unique_impl;
-
-template <>
-struct unique_impl<> {
-    using rest = std::tuple<>;
-    using type = std::tuple<>;
-};
-
-template <typename T, typename... Ts>
-struct unique_impl<T, Ts...> {
-    using rest = unique_impl<Ts...>::type;
-    constexpr static bool contains_it = (std::is_same_v<T, Ts> || ...);
-    using type = std::conditional_t<
-        contains_it,
-        rest,
-        decltype(std::tuple_cat(std::declval<std::tuple<T>>(), std::declval<rest>()))>;
-};
-
 template <typename T>
-struct as_multiset;
-template <template <typename...> class T, typename... Us>
-struct as_multiset<T<Us...>> {
-    using type = type_multiset<Us...>;
-};
+struct as_type_multiset;
 
-};  // namespace internal
+template <template <typename...> class T, typename... Ts>
+struct as_type_multiset<T<Ts...>> : type_multiset<Ts...> {};
 
 template <typename... Ts>
 class [[nodiscard]] type_multiset {
@@ -59,6 +36,9 @@ class [[nodiscard]] type_multiset {
     using get = std::tuple_element_t<I, std::tuple<Ts...>>;
 
     template <typename T>
+    constexpr static bool contains = (std::is_same_v<T, Ts> || ...);
+
+    template <typename T>
     constexpr static auto index = []() {
         return ((std::is_same_v<T, Ts> || ...) ? (([]() {
             signed i = 0;
@@ -67,9 +47,6 @@ class [[nodiscard]] type_multiset {
         }()))
                                                : -1);
     }();
-
-    template <typename T>
-    constexpr static bool contains = (std::is_same_v<T, Ts> || ...);
 
     template <std::size_t idx, typename T>
     constexpr static bool contains_from = []<std::size_t... i>(std::index_sequence<i...>) {
@@ -123,7 +100,19 @@ class [[nodiscard]] type_multiset {
     }(std::make_index_sequence<sizeof...(Ts)>{});
 
    public:
-    using unique = internal::as_multiset<typename internal::unique_impl<Ts...>::type>::type;
+    using strictly_unique = decltype([](std::tuple<std::type_identity<Ts>...>&& tup) consteval {
+        return std::apply([](auto&&... args) {
+            return std::tuple_cat([](auto&& arg) {
+                using extract = typename std::remove_reference_t<decltype(arg)>::type;
+                constexpr bool contains_it = this_t::template contains_from<this_t::template index<extract> + 1, extract>;
+                if constexpr (!contains_it) {
+                    return std::make_tuple(std::forward<decltype(arg)>(arg));
+                } else {
+                    return std::make_tuple();
+                }
+            }(std::forward<decltype(args)>(args))...);
+        },
+                          tup);
+    }(std::make_tuple(std::type_identity<Ts>{}...)));
 };
-
-}  // namespace ndo
+};  // namespace ndo

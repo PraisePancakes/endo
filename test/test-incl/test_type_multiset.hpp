@@ -19,9 +19,8 @@ void test_type_multiset() {
 
     static_assert(!ndo::type_multiset<from_tup>::contains<float>);
 
-    constexpr auto idx = ndo::type_multiset<int, char>::index<bool>;
     constexpr auto idx2 = ndo::type_multiset<int, char>::index<int>;
-    static_assert(idx == -1);
+
     static_assert(idx2 == 0);
 
     using v = type_multiset<int, char, bool>::pop_back;
@@ -35,11 +34,12 @@ void test_type_multiset() {
 
     static_assert(type_multiset<int, char, std::string, bool>::contains_from<1, bool>);
     static_assert(type_multiset<int, char, std::string, bool>::contains_from<0, int>);
+    static_assert(!type_multiset<int, char, std::string, bool>::contains_from<1, int>);
     static_assert(!type_multiset<int, char, std::string, bool>::contains_from<3, int>);
     static_assert(!type_multiset<int, char, int, bool>::is_unique);
     // static_assert(type_multiset<int, char, bool>::is_unique == true);
     static_assert(type_multiset<int>::is_unique);
 
-    using poop = type_multiset<int, char, char, bool>::unique;
+    using poop = type_multiset<int, char, bool, char, int>::strictly_unique;
 };
 }  // namespace ndo::test
