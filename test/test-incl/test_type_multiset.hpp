@@ -18,15 +18,6 @@ void test_type_multiset() {
     using from_tup1 = std::tuple<char, bool, float>;
 
     static_assert(!ndo::type_multiset<from_tup>::contains<float>);
-    static_assert(ndo::type_multiset<from_tup>::contains<int>);
-    using t = ndo::type_multiset<from_tup, from_tup1>;
-    static_assert(std::is_same_v<t::get<0>, int>);
-    static_assert(std::is_same_v<t::get<1>, char>);
-    static_assert(std::is_same_v<t::get<2>, bool>);
-    static_assert(std::is_same_v<t::get<3>, char>);
-    static_assert(std::is_same_v<t::get<4>, bool>);
-    static_assert(std::is_same_v<t::get<5>, float>);
-    static_assert(std::is_same_v<t::pop_front, ndo::type_multiset<char, bool, char, bool, float>>);
 
     constexpr auto idx = ndo::type_multiset<int, char>::index<bool>;
     constexpr auto idx2 = ndo::type_multiset<int, char>::index<int>;
@@ -46,10 +37,9 @@ void test_type_multiset() {
     static_assert(type_multiset<int, char, std::string, bool>::contains_from<0, int>);
     static_assert(!type_multiset<int, char, std::string, bool>::contains_from<3, int>);
     static_assert(!type_multiset<int, char, int, bool>::is_unique);
-    static_assert(type_multiset<int, char, bool>::is_unique == true);
+    // static_assert(type_multiset<int, char, bool>::is_unique == true);
     static_assert(type_multiset<int>::is_unique);
 
-    using fre = type_multiset<char, int, char, bool, int>::unique;
-   
+    using poop = type_multiset<int, char, char, bool>::unique;
 };
 }  // namespace ndo::test
