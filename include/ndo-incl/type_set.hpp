@@ -13,6 +13,33 @@ struct [[nodiscard]] type_multiset<Ts<T1...>> : public type_multiset<T1...> {
 template <template <typename...> class Ts, typename... T1, typename... T2>
 struct [[nodiscard]] type_multiset<Ts<T1...>, Ts<T2...>> : public type_multiset<T1..., T2...> {};
 
+namespace helper {
+template <typename... T>
+struct unique_impl;
+
+template <>
+struct unique_impl<> {
+    using type = std::tuple<>;
+};
+template <typename H, typename... Tail>
+struct unique_impl<H, Tail...> {
+    constexpr static bool is_dup = (... || std::is_same_v<H, Tail>);
+    using tail = unique_impl<Tail...>::type;
+    using type = std::conditional_t<
+        is_dup,
+        tail,
+        decltype(std::tuple_cat(std::tuple<H>{}, tail{}))>;
+};
+template <typename T>
+struct from_tuple;
+
+template <typename... Us>
+struct from_tuple<std::tuple<Us...>> {
+    using type = type_multiset<Us...>;
+};
+
+}  // namespace helper
+
 template <>
 struct type_multiset<> {
     using this_t = type_multiset<>;
@@ -141,15 +168,9 @@ class [[nodiscard]] type_multiset {
         return ((!this_t::contains_from<i + 1, Ts>) && ...);
     }(std::make_index_sequence<sizeof...(Ts)>{});
 
-
-    using unique = decltype([]<std::size_t... i>(std::index_sequence<i...>) consteval {
-        return std::type_identity<
-            type_multiset<
-                std::conditional_t<
-                    this_t::contains_from<i + 1, this_t::get<i>>,
-                    type_multiset<>,
-                    this_t::get<i>>...>>{};
-    }(std::make_index_sequence<sizeof...(Ts)>{}))::type;
+   private:
+   public:
+    using unique = typename helper::from_tuple<typename helper::unique_impl<Ts...>::type>::type;
 };
 
 }  // namespace ndo

@@ -50,5 +50,6 @@ void test_type_multiset() {
     static_assert(type_multiset<int>::is_unique);
 
     using fre = type_multiset<char, int, char, bool, int>::unique;
+   
 };
 }  // namespace ndo::test
