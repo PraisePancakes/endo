@@ -7,11 +7,19 @@ namespace ndo {
 template <typename... Ts>
 class [[nodiscard]] type_multiset;
 
-template <typename T>
-struct as_type_multiset;
-
 template <template <typename...> class T, typename... Ts>
-struct as_type_multiset<T<Ts...>> : type_multiset<Ts...> {};
+struct type_multiset<T<Ts...>> : type_multiset<Ts...> {};
+
+namespace internal {
+template <typename Tuple>
+struct tuple_identity_to_multiset;
+
+template <typename... Idents>
+struct tuple_identity_to_multiset<std::tuple<Idents...>> {
+    using type = type_multiset<typename Idents::type...>;
+};
+
+}  // namespace internal
 
 template <typename... Ts>
 class [[nodiscard]] type_multiset {
@@ -99,8 +107,8 @@ class [[nodiscard]] type_multiset {
         return ((!this_t::contains_from<i + 1, Ts>) && ...);
     }(std::make_index_sequence<sizeof...(Ts)>{});
 
-   public:
-    using strictly_unique = decltype([](std::tuple<std::type_identity<Ts>...>&& tup) consteval {
+   private:
+    using strictly_unique_tuple = decltype([](std::tuple<std::type_identity<Ts>...>&& tup) consteval {
         return std::apply([](auto&&... args) {
             return std::tuple_cat([](auto&& arg) {
                 constexpr bool contains_it = this_t::template contains_from<this_t::template index<typename std::remove_reference_t<decltype(arg)>::type> + 1, typename std::remove_reference_t<decltype(arg)>::type>;
@@ -113,5 +121,8 @@ class [[nodiscard]] type_multiset {
         },
                           tup);
     }(std::make_tuple(std::type_identity<Ts>{}...)));
+
+   public:
+    using strictly_unique = typename internal::tuple_identity_to_multiset<strictly_unique_tuple>::type;
 };
 };  // namespace ndo
