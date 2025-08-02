@@ -19,6 +19,8 @@ struct tuple_identity_to_multiset<std::tuple<Idents...>> {
     using type = type_multiset<typename Idents::type...>;
 };
 
+template <std::size_t C>
+using value = std::integral_constant<std::size_t, C>;
 }  // namespace internal
 
 template <typename... Ts>
@@ -57,11 +59,17 @@ class [[nodiscard]] type_multiset {
     }();
 
     template <std::size_t idx, typename T>
-    constexpr static bool contains_from = []<std::size_t... i>(std::index_sequence<i...>) {
-        using ts = type_multiset<this_t::get<i + idx>...>;
-        static_assert(idx >= 0 || idx < ts::cardinality, "index out of constexpr range of type set");
-        return ts::template contains<T>;
+    constexpr static bool contains_from = []<std::size_t... i>(std::index_sequence<i...>) constexpr noexcept {
+        static_assert(idx < sizeof...(Ts), "Index out of range");
+        using type = std::tuple<Ts...>;
+        return (std::is_same_v<std::tuple_element_t<idx + i, type>, T> || ...);
     }(std::make_index_sequence<sizeof...(Ts) - idx>{});
+
+    template <std::size_t idx, typename T>
+    constexpr static bool contains_to = []<std::size_t... i>(std::index_sequence<i...>) constexpr noexcept {
+        using type = std::tuple<Ts...>;
+        return (... || std::is_same_v<std::tuple_element_t<i, type>, T>);
+    }(std::make_index_sequence<idx>{});
 
     using pop_front = decltype([]() {
         if constexpr (this_t::cardinality == 0) {
@@ -103,26 +111,25 @@ class [[nodiscard]] type_multiset {
         };
     };
 
-    constexpr static bool is_unique = []<std::size_t... i>(std::index_sequence<i...>) constexpr {
-        return ((!this_t::contains_from<i + 1, Ts>) && ...);
-    }(std::make_index_sequence<sizeof...(Ts)>{});
-
-   private:
-    using strictly_unique_tuple = decltype([](std::tuple<std::type_identity<Ts>...>&& tup) consteval {
-        return std::apply([](auto&&... args) {
-            return std::tuple_cat([](auto&& arg) {
-                constexpr bool contains_it = this_t::template contains_from<this_t::template index<typename std::remove_reference_t<decltype(arg)>::type> + 1, typename std::remove_reference_t<decltype(arg)>::type>;
-                if constexpr (!contains_it) {
-                    return std::make_tuple(std::forward<decltype(arg)>(arg));
+    using unique = internal::tuple_identity_to_multiset<decltype([]() {
+        return ([ot = std::make_tuple(
+                     std::type_identity<Ts>{}...)]<std::size_t... i>(
+                    std::index_sequence<i...>) {
+            return std::tuple_cat([nt = std::move(ot)]<std::size_t idx>(internal::value<idx>) {
+                if constexpr (idx == 0) {
+                    return std::make_tuple(std::get<0>(nt));
+                } else if constexpr (idx > 0 && idx < sizeof...(Ts) &&
+                                     !this_t::template contains_to<
+                                         idx, typename std::tuple_element_t<
+                                                  idx, decltype(nt)>::type>) {
+                    return std::make_tuple(std::get<idx>(nt));
                 } else {
                     return std::make_tuple();
                 }
-            }(std::forward<decltype(args)>(args))...);
-        },
-                          tup);
-    }(std::make_tuple(std::type_identity<Ts>{}...)));
+            }(internal::value<i>{})...);
+        }(std::make_index_sequence<sizeof...(Ts)>{}));
+    }())>::type;
 
-   public:
-    using strictly_unique = typename internal::tuple_identity_to_multiset<strictly_unique_tuple>::type;
+    constexpr static bool is_unique = []() constexpr { return this_t::cardinality == this_t::unique::cardinality; }();
 };
 };  // namespace ndo

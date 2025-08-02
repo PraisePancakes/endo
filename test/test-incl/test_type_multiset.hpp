@@ -40,6 +40,6 @@ void test_type_multiset() {
     // static_assert(type_multiset<int, char, bool>::is_unique == true);
     static_assert(type_multiset<int>::is_unique);
 
-    using poop = type_multiset<int, char, bool, char, int>::strictly_unique;
+  
 };
 }  // namespace ndo::test
