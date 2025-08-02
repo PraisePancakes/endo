@@ -60,10 +60,10 @@ class [[nodiscard]] type_multiset {
 
     template <std::size_t idx, typename T>
     constexpr static bool contains_from = []<std::size_t... i>(std::index_sequence<i...>) constexpr noexcept {
-        static_assert(idx < sizeof...(Ts), "Index out of range");
+        static_assert(idx < this_t::cardinality, "Index out of range");
         using type = std::tuple<Ts...>;
         return (std::is_same_v<std::tuple_element_t<idx + i, type>, T> || ...);
-    }(std::make_index_sequence<sizeof...(Ts) - idx>{});
+    }(std::make_index_sequence<this_t::cardinality - idx>{});
 
     template <std::size_t idx, typename T>
     constexpr static bool contains_to = []<std::size_t... i>(std::index_sequence<i...>) constexpr noexcept {
@@ -118,7 +118,7 @@ class [[nodiscard]] type_multiset {
             return std::tuple_cat([nt = std::move(ot)]<std::size_t idx>(internal::value<idx>) {
                 if constexpr (idx == 0) {
                     return std::make_tuple(std::get<0>(nt));
-                } else if constexpr (idx > 0 && idx < sizeof...(Ts) &&
+                } else if constexpr (idx > 0 && idx < this_t::cardinality &&
                                      !this_t::template contains_to<
                                          idx, typename std::tuple_element_t<
                                                   idx, decltype(nt)>::type>) {
@@ -127,7 +127,7 @@ class [[nodiscard]] type_multiset {
                     return std::make_tuple();
                 }
             }(internal::value<i>{})...);
-        }(std::make_index_sequence<sizeof...(Ts)>{}));
+        }(std::make_index_sequence<this_t::cardinality>{}));
     }())>::type;
 
     constexpr static bool is_unique = []() constexpr { return this_t::cardinality == this_t::unique::cardinality; }();
