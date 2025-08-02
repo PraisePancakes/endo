@@ -40,6 +40,7 @@ void test_type_multiset() {
     // static_assert(type_multiset<int, char, bool>::is_unique == true);
     static_assert(type_multiset<int>::is_unique);
 
-  
+    static_assert(std::is_same_v<type_multiset<int, char, char, int>::unique, type_multiset<int, char>>);
+    static_assert(std::is_same_v<type_multiset<void, int, void>::unique, type_multiset<void, int>>);
 };
 }  // namespace ndo::test
