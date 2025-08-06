@@ -114,28 +114,24 @@ class [[nodiscard]] type_set {
         };
     };
 
-    using unique = internal::tuple_identity_to_multiset<decltype([]() {
-        return ([ot = std::make_tuple(
-                     std::type_identity<Ts>{}...)]<std::size_t... i>(
-                    std::index_sequence<i...>) {
-            return std::tuple_cat([nt = std::forward<decltype(ot)>(ot)]<std::size_t idx>(internal::value<idx>) {
-                if constexpr (idx == 0) {
-                    return std::make_tuple(std::get<0>(nt));
-                } else if constexpr (idx > 0 && idx < this_t::cardinality &&
-                                     !this_t::template contains_to<
-                                         idx, typename std::tuple_element_t<
-                                                  idx, decltype(nt)>::type>) {
-                    return std::make_tuple(std::get<idx>(nt));
-                } else {
-                    return std::make_tuple();
-                }
-            }(internal::value<i>{})...);
-        }(std::make_index_sequence<this_t::cardinality>{}));
-    }())>::type;
+    using unique = internal::tuple_identity_to_multiset<decltype([ot = std::make_tuple(std::type_identity<Ts>{}...)]<std::size_t... i>(std::index_sequence<i...>) mutable constexpr {
+        return std::tuple_cat([nt = std::forward<decltype(ot)>(ot)]<std::size_t idx>(internal::value<idx>) {
+            if constexpr (idx == 0) {
+                return std::make_tuple(std::get<0>(nt));
+            } else if constexpr (idx > 0 && idx < this_t::cardinality &&
+                                 !this_t::template contains_to<
+                                     idx, typename std::tuple_element_t<
+                                              idx, decltype(nt)>::type>) {
+                return std::make_tuple(std::get<idx>(nt));
+            } else {
+                return std::make_tuple();
+            }
+        }(internal::value<i>{})...);
+    }(std::make_index_sequence<this_t::cardinality>{}))>::type;
 
     // eczbeck dont get mad, i like this idea
     template <auto Cond>
-    using filter = internal::tuple_identity_to_multiset<decltype([xt = std::make_tuple(std::type_identity<Ts>{}...)]() {
+    using filter = internal::tuple_identity_to_multiset<decltype([xt = std::make_tuple(std::type_identity<Ts>{}...)]() mutable constexpr {
         return std::apply([](auto&&... args) {
             return std::tuple_cat([](auto&& arg) {
                 if constexpr (satisfies_it<Cond, typename std::remove_reference_t<decltype(arg)>::type>) {

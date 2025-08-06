@@ -23,27 +23,27 @@ void test_type_set() {
 
     static_assert(idx2 == 0);
 
-    using v = type_set<int, char, bool>::pop_back;
+    using v = ndo::type_set<int, char, bool>::pop_back;
 
-    using reverse = type_set<int, char, float>::reverse;
+    using reverse = ndo::type_set<int, char, float>::reverse;
 
-    using l = type_set<int, char, bool, float>::splicer::at<2>::left;
-    using r = type_set<int>::splicer::at<0>::right;
+    using l = ndo::type_set<int, char, bool, float>::splicer::at<2>::left;
+    using r = ndo::type_set<int>::splicer::at<0>::right;
 
-    using from_empty = type_set<>::append<int>::type::prepend<bool, char>::type;
+    using from_empty = ndo::type_set<>::append<int>::type::prepend<bool, char>::type;
 
-    static_assert(type_set<int, char, std::string, bool>::contains_from<1, bool>);
-    static_assert(type_set<int, char, std::string, bool>::contains_from<0, int>);
-    static_assert(!type_set<int, char, std::string, bool>::contains_from<1, int>);
-    static_assert(!type_set<int, char, std::string, bool>::contains_from<3, int>);
-    static_assert(!type_set<int, char, int, bool>::is_unique);
-    // static_assert(type_set<int, char, bool>::is_unique == true);
-    static_assert(type_set<int>::is_unique);
+    static_assert(ndo::type_set<int, char, std::string, bool>::contains_from<1, bool>);
+    static_assert(ndo::type_set<int, char, std::string, bool>::contains_from<0, int>);
+    static_assert(!ndo::type_set<int, char, std::string, bool>::contains_from<1, int>);
+    static_assert(!ndo::type_set<int, char, std::string, bool>::contains_from<3, int>);
+    static_assert(!ndo::type_set<int, char, int, bool>::is_unique);
+    // static_assert(ndo::type_set<int, char, bool>::is_unique == true);
+    static_assert(ndo::type_set<int>::is_unique);
 
-    static_assert(std::is_same_v<type_set<int, char, char, int>::unique, type_set<int, char>>);
-    static_assert(std::is_same_v<type_set<void, int, void>::unique, type_set<void, int>>);
+    static_assert(std::is_same_v<ndo::type_set<int, char, char, int>::unique, ndo::type_set<int, char>>);
+    static_assert(std::is_same_v<ndo::type_set<void, int, void>::unique, ndo::type_set<void, int>>);
 
-    using t = type_set<int, char, double, bool>::filter<[]<std::integral>() {}>;
-    static_assert(t::cardinality == 3);
+    using t = ndo::type_set<int, char, double, bool>::filter<[]<std::integral>() {}>;
+    static_assert(std::is_same_v<t, ndo::type_set<int, char, bool>>);
 };
 }  // namespace ndo::test
