@@ -1,8 +1,7 @@
 #include <iostream>
+#include <string>
 
 #include "test/test.hpp"
-
-
 
 int main(int argc, char** argv) {
     ndo::test::test_maybe();
@@ -13,7 +12,7 @@ int main(int argc, char** argv) {
     ndo::test::test_uncurry();
     ndo::test::test_combinator();
     ndo::test::test_transform();
-    ndo::test::test_type_multiset();
+    ndo::test::test_type_set();
 
     return 0;
 }
