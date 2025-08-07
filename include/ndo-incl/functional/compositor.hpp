@@ -1,5 +1,5 @@
 #pragma once
-#include "maybe.hpp"
+
 namespace ndo {
 
 struct compositor {
@@ -24,9 +24,5 @@ struct compositor {
     [[nodiscard]] constexpr static decltype(auto) thread_first(F&& f, G&& g, Fs&&... fs) {
         return compose(compose(std::forward<Fs>(fs)..., std::forward<G>(g)), std::forward<F>(f));
     }
-
-    
-
-
 };
 };  // namespace ndo

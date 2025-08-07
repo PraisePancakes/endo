@@ -2,7 +2,6 @@
 #include <functional>
 #include <variant>
 
-#include "visitor.hpp"
 namespace ndo {
 
 struct ndo_null_t {};
@@ -118,7 +117,7 @@ class maybe<ndo_null_t> {
     };
 
     constexpr ndo_null_t just_or(void) {
-       return ndo_nothing;
+        return ndo_nothing;
     };
 
     template <typename F>

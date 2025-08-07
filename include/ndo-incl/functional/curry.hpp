@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 
-#include "function_traits.hpp"
 namespace ndo {
 
 // f(int, char, bool) -> (F) => g(int)(char)(bool)
