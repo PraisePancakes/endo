@@ -59,12 +59,21 @@ template <typename Container>
 
 template <typename T1, typename T2>
     requires(std::tuple_size_v<T1> == std::tuple_size_v<T2>)
-[[nodiscard]] constexpr auto zip(const T1& t1, const T2& t2) {
+[[nodiscard]] constexpr auto zip(const T1& t1, const T2& t2) noexcept {
     return [&]<std::size_t... i>(std::index_sequence<i...>) {
-        return std::tuple_cat([&]<std::size_t idx>(ndo::value<idx>) {
+        return std::make_tuple([&]<std::size_t idx>(ndo::value<idx>) {
             return std::make_pair(std::get<idx>(t1), std::get<idx>(t2));
         }(ndo::value<i>{})...);
     }(std::make_index_sequence<std::tuple_size_v<T1>>{});
 };
 
-}  // namespace ndo
+template <typename T>
+[[nodiscard]] constexpr auto unzip(const T& t) noexcept {
+    return [&]<std::size_t... i>(std::index_sequence<i...>) {
+        return std::tuple_cat([&]<std::size_t idx>(ndo::value<idx>) {
+            return std::make_pair(std::get<idx>(t).first, std::get<idx>(t).second);
+        }(ndo::value<i>{})...);
+    }(std::make_index_sequence<std::tuple_size_v<T>>{});
+}
+
+};  // namespace ndo
