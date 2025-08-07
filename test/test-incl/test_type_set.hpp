@@ -44,7 +44,7 @@ void test_type_set() {
     static_assert(std::is_same_v<ndo::type_set<void, int, void>::unique, ndo::type_set<void, int>>);
     static_assert(!ndo::satisfies_it<[]<std::integral>() {}, std::string>);
     static_assert(ndo::satisfies_it<[]<std::integral>() {}, int>);
-    using t = ndo::type_set<int, char, std::string>::filter<[]<std::integral>() {}>;
-    static_assert(std::is_same_v<t, ndo::type_set<int, char>>);
+    using typer = ndo::type_set<int, char, std::string>::filter<[]<std::integral>() {}>;
+    static_assert(std::is_same_v<typer, ndo::type_set<int, char>>);
 };
 }  // namespace ndo::test

@@ -121,8 +121,8 @@ class [[nodiscard]] type_set {
     template <auto Cond>
     using filter = internal::tuple_identity_to_multiset<decltype([]<std::size_t... i>(std::index_sequence<i...>) mutable constexpr {
         return std::tuple_cat([nt = std::make_tuple(std::type_identity<Ts>{}...)]<std::size_t idx>(ndo::value<idx>) {
-            if constexpr (satisfies_it<Cond, typename std::tuple_element_t<
-                                                 idx, decltype(nt)>::type>) {
+            if constexpr (ndo::satisfies_it<Cond, typename std::tuple_element_t<
+                                                      idx, decltype(nt)>::type>) {
                 return std::make_tuple(std::get<idx>(nt));
             } else {
                 return std::make_tuple();

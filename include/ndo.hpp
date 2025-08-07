@@ -1,5 +1,6 @@
 #include "ndo-incl/algebraic/either.hpp"
 #include "ndo-incl/algebraic/maybe.hpp"
+#include "ndo-incl/algorithms/construct.hpp"
 #include "ndo-incl/algorithms/transform.hpp"
 #include "ndo-incl/concepts/is_ndo_callable.hpp"
 #include "ndo-incl/concepts/is_noexcept.hpp"
