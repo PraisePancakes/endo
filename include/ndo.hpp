@@ -1,6 +1,7 @@
 #include "ndo-incl/algebraic/either.hpp"
 #include "ndo-incl/algebraic/maybe.hpp"
 #include "ndo-incl/algebraic/nothing.hpp"
+#include "ndo-incl/algorithms/all_of.hpp"
 #include "ndo-incl/algorithms/find_if.hpp"
 #include "ndo-incl/algorithms/has_if.hpp"
 #include "ndo-incl/algorithms/keep_if.hpp"

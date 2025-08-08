@@ -31,7 +31,10 @@ void test_transform() {
     auto v3 = ndo::find_if(vec, [](int x) { return x > 2; });
 
     if (v3.has_value()) {
-        std::cout << "HASSSSSITTTTT " << v3.just_or_default();
+        std::cout << "HASSSSSITTTTT " << v3.just_or_default() << std::endl;
     }
+
+    auto v4 = ndo::all_of(vec, [](int x) { return x > 1; });
+    std::cout << v4.size() << std::endl;
 };
 };  // namespace ndo::test
