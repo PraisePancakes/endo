@@ -36,5 +36,12 @@ void test_transform() {
 
     auto v4 = ndo::all_of(vec, [](int x) { return x > 1; });
     std::cout << v4.size() << std::endl;
+
+    std::vector<std::vector<std::vector<int>>> vec1{{{0}, {1}, {2}}, {{1}, {2}, {3, 4, 5}}};
+    std::vector<int> vec2;
+    ndo::flatten(vec1, vec2);
+    for (auto e : vec2) {
+        std::cout << e << " , ";
+    }
 };
 };  // namespace ndo::test
