@@ -131,5 +131,16 @@ class [[nodiscard]] type_set {
     }(std::make_index_sequence<this_t::cardinality>{}))>::type;
 
     constexpr static bool is_unique = []() constexpr { return this_t::cardinality == this_t::unique::cardinality; }();
+
+    template <std::size_t I>
+    using remove_at = internal::tuple_identity_to_multiset<decltype([]<std::size_t... i>(std::index_sequence<i...>) mutable constexpr {
+        return std::tuple_cat([nt = std::make_tuple(std::type_identity<Ts>{}...)]<std::size_t idx>(ndo::value<idx>) {
+            if constexpr (idx == I) {
+                return std::make_tuple();
+            } else {
+                return std::make_tuple(std::get<idx>(nt));
+            }
+        }(ndo::value<i>{})...);
+    }(std::make_index_sequence<this_t::cardinality>{}))>::type;
 };
 };  // namespace ndo

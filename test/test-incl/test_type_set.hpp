@@ -46,5 +46,7 @@ void test_type_set() {
     static_assert(ndo::satisfies_it<[]<std::integral>() {}, int>);
     using typer = ndo::type_set<int, char, std::string>::filter<[]<std::integral>() {}>;
     static_assert(std::is_same_v<typer, ndo::type_set<int, char>>);
+
+    using tp = ndo::type_set<int, char, bool>::remove_at<0>;
 };
 }  // namespace ndo::test
