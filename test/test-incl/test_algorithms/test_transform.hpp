@@ -27,5 +27,11 @@ void test_transform() {
     std::cout << std::get<1>(unzipped) << std::endl;
     std::cout << std::get<2>(unzipped) << std::endl;
     std::cout << std::get<3>(unzipped) << std::endl;
+
+    auto v3 = ndo::find_if(vec, [](int x) { return x > 2; });
+
+    if (v3.has_value()) {
+        std::cout << "HASSSSSITTTTT " << v3.just_or_default();
+    }
 };
 };  // namespace ndo::test

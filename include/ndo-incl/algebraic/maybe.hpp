@@ -14,6 +14,10 @@ class maybe {
     constexpr maybe(const T& v) : value(v) {};
     constexpr maybe(T&& v) : value(std::move(v)) {};
     constexpr maybe(const maybe<T>& o) : value(std::move(o.value)) {};
+    constexpr maybe& operator=(const T& v) {
+        value = v;
+        return *this;
+    };
     constexpr maybe& operator=(const ndo_null_t& n) {
         value = n;
         return *this;
@@ -93,7 +97,7 @@ template <>
 class maybe<ndo_null_t> {
    public:
     constexpr maybe() noexcept = default;
-    constexpr maybe(ndo_null_t) noexcept {}
+    constexpr maybe(ndo_null_t) noexcept {};
     constexpr maybe(const maybe&) noexcept = default;
     constexpr maybe(maybe&&) noexcept = default;
     ~maybe() = default;
