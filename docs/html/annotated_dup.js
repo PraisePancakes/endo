@@ -1,0 +1,48 @@
+var annotated_dup =
+[
+    [ "ndo", "namespacendo.html", [
+      [ "internal", "namespacendo_1_1internal.html", [
+        [ "is_vector", "structndo_1_1internal_1_1is__vector.html", null ],
+        [ "is_vector< std::vector< T, A > >", "structndo_1_1internal_1_1is__vector_3_01std_1_1vector_3_01_t_00_01_a_01_4_01_4.html", null ],
+        [ "tuple_identity_to_multiset", "structndo_1_1internal_1_1tuple__identity__to__multiset.html", null ],
+        [ "tuple_identity_to_multiset< std::tuple< Idents... > >", "structndo_1_1internal_1_1tuple__identity__to__multiset_3_01std_1_1tuple_3_01_idents_8_8_8_01_4_01_4.html", null ],
+        [ "y_ready", "classndo_1_1internal_1_1y__ready.html", null ]
+      ] ],
+      [ "compositor", "structndo_1_1compositor.html", null ],
+      [ "either", "classndo_1_1either.html", "classndo_1_1either" ],
+      [ "flagnum", "structndo_1_1flagnum.html", null ],
+      [ "function_traits", "structndo_1_1function__traits.html", null ],
+      [ "function_traits< Ret(*)(Args...)>", "structndo_1_1function__traits_3_01_ret_07_5_08_07_args_8_8_8_08_4.html", null ],
+      [ "function_traits< Ret(Args...)>", "structndo_1_1function__traits_3_01_ret_07_args_8_8_8_08_4.html", null ],
+      [ "function_traits< Ret(Class::*)(Args...) const >", "structndo_1_1function__traits_3_01_ret_07_class_1_1_5_08_07_args_8_8_8_08_01const_01_4.html", null ],
+      [ "function_traits< Ret(Class::*)(Args...)>", "structndo_1_1function__traits_3_01_ret_07_class_1_1_5_08_07_args_8_8_8_08_4.html", null ],
+      [ "function_traits< std::function< Ret(Args...)> >", "structndo_1_1function__traits_3_01std_1_1function_3_01_ret_07_args_8_8_8_08_4_01_4.html", null ],
+      [ "function_traits_meta", "structndo_1_1function__traits__meta.html", null ],
+      [ "hash_t", "structndo_1_1hash__t.html", null ],
+      [ "is_basic_string", "structndo_1_1is__basic__string.html", null ],
+      [ "is_basic_string< std::basic_string< CharT, Traits, Allocator > >", "structndo_1_1is__basic__string_3_01std_1_1basic__string_3_01_char_t_00_01_traits_00_01_allocator_01_4_01_4.html", null ],
+      [ "is_maybe_trait", "structndo_1_1is__maybe__trait.html", null ],
+      [ "is_maybe_trait< maybe< T > >", "structndo_1_1is__maybe__trait_3_01maybe_3_01_t_01_4_01_4.html", null ],
+      [ "is_noexcept", "structndo_1_1is__noexcept.html", null ],
+      [ "is_noexcept< F(Args...) noexcept >", "structndo_1_1is__noexcept_3_01_f_07_args_8_8_8_08_01noexcept_01_4.html", null ],
+      [ "is_nothing_trait", "structndo_1_1is__nothing__trait.html", null ],
+      [ "is_nothing_trait< maybe< ndo_null_t > >", "structndo_1_1is__nothing__trait_3_01maybe_3_01ndo__null__t_01_4_01_4.html", null ],
+      [ "maybe", "classndo_1_1maybe.html", "classndo_1_1maybe" ],
+      [ "maybe< ndo_null_t >", "classndo_1_1maybe_3_01ndo__null__t_01_4.html", "classndo_1_1maybe_3_01ndo__null__t_01_4" ],
+      [ "name_of", "structndo_1_1name__of.html", null ],
+      [ "name_of< char >", "structndo_1_1name__of_3_01char_01_4.html", null ],
+      [ "name_of< float >", "structndo_1_1name__of_3_01float_01_4.html", null ],
+      [ "name_of< int >", "structndo_1_1name__of_3_01int_01_4.html", null ],
+      [ "name_of< long >", "structndo_1_1name__of_3_01long_01_4.html", null ],
+      [ "name_of< std::uint16_t >", "structndo_1_1name__of_3_01std_1_1uint16__t_01_4.html", null ],
+      [ "name_of< std::uint32_t >", "structndo_1_1name__of_3_01std_1_1uint32__t_01_4.html", null ],
+      [ "name_of< std::uint64_t >", "structndo_1_1name__of_3_01std_1_1uint64__t_01_4.html", null ],
+      [ "name_of< std::uint8_t >", "structndo_1_1name__of_3_01std_1_1uint8__t_01_4.html", null ],
+      [ "name_of< void >", "structndo_1_1name__of_3_01void_01_4.html", null ],
+      [ "ndo_null_t", "structndo_1_1ndo__null__t.html", null ],
+      [ "type_descriptor", "structndo_1_1type__descriptor.html", null ],
+      [ "type_set", "classndo_1_1type__set.html", "classndo_1_1type__set" ],
+      [ "type_set< T< Ts... > >", "structndo_1_1type__set_3_01_t_3_01_ts_8_8_8_01_4_01_4.html", "structndo_1_1type__set_3_01_t_3_01_ts_8_8_8_01_4_01_4" ],
+      [ "visitor", "structndo_1_1visitor.html", null ]
+    ] ]
+];
