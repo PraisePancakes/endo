@@ -1,0 +1,50 @@
+/**
+ * \mainpage Endo
+ * \author Ary S.
+ * 
+ * C++ modern functional library.
+ */
+
+
+/**
+ * \defgroup algebraic Algebraic
+ * @{
+ * Algebraic data types.
+ * @}
+ */
+
+ /**
+ * \defgroup algorithms Algorithms
+ * @{
+ * Functional algorithms.
+ * @}
+ */
+
+ 
+ /**
+ * \defgroup concepts Concepts
+ * @{
+ * Metaprogramming traits and concepts.
+ * @}
+ */
+
+  /**
+ * \defgroup functional Functional
+ * @{
+ * Functional algorithms.
+ * @}
+ */
+
+   /**
+ * \defgroup meta Meta
+ * @{
+ * Metaprogramming utilies.
+ * @}
+ */
+
+    /**
+ * \defgroup utils Utils
+ * @{
+ * General utilities.
+ * @}
+ */
