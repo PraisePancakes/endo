@@ -18,8 +18,8 @@ void curry_ex() {
     auto ucurr = ndo::uncurry(v1);
     std::cout << "here" << ucurr(1, 2, 2) << std::endl;
 
-    auto v1 = ndo::curry(foo);
-    auto c = ndo::uncurry(v1);
+    auto vu1 = ndo::curry(foo);
+    auto c = ndo::uncurry(vu1);
 
     auto ans = c(1, 2);
 
