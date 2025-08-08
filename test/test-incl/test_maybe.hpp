@@ -7,7 +7,7 @@ namespace ndo::test {
 
 void test_maybe() {
     // constexpr tests
-
+    std::cout << " MAYBE " << std::endl;
     constexpr ndo::maybe<int> may;
     static_assert(!may);
     static_assert(ndo::is_maybe<decltype(may)>);
@@ -49,9 +49,15 @@ void test_maybe() {
         return ndo::ndo_nothing;
     };
 
-    auto v = may7.and_then(lam3).and_then(lam4).and_then(lam4);  // nothing type
+    auto lam5 = [](ndo::ndo_null_t n) {
+        return 3;
+    };
+
+    auto v = may7.and_then(lam3).and_then(lam4).and_then(lam5);  // nothing type
 
     std::cout << std::boolalpha << v.has_value() << std::endl;
+
+    std::cout << "\n.\n.\n.END MAYBE " << std::endl;
 };
 
 }  // namespace ndo::test

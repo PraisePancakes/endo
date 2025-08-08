@@ -4,6 +4,7 @@
 #include "../include/ndo.hpp"
 namespace ndo::examples {
 void either_ex() {
+  
     ndo::either<std::string, int> e;
 
     e = 0;
@@ -17,6 +18,7 @@ void either_ex() {
     auto v = e.and_then([](int x) { return "hi"; }).and_then([](const char* v) { return 10; });
 
     std::cout << v.just_or(0) << std::endl;
+  
 };
 
 void maybe_ex() {

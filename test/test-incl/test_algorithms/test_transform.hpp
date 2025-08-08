@@ -5,9 +5,13 @@
 namespace ndo::test {
 
 void test_transform() {
+    std::cout << "MAP FROM" << std::endl;
     std::vector<int> vec{0, 1, 2, 3};
     auto v = ndo::map_from(vec, [](int x) { return x + 2; });
-    std::for_each(v.begin(), v.end(), [](int v) { std::cout << v << std::endl; });
+    std::for_each(v.begin(), v.end(), [](int v) { std::cout << v << " , "; });
+    std::cout << "\n.\n.\n.END MAP FROM" << std::endl;
+
+    std::cout << "ZIP" << std::endl;
 
     std::tuple<int, std::string> t1 = std::make_tuple(4, "hi");
     std::tuple<char, bool> t2 = std::make_tuple('a', false);
@@ -15,26 +19,19 @@ void test_transform() {
     auto zipped = ndo::zip(t1, t2);
 
     std::cout << "ZIPPED\n";
-    std::cout << std::get<0>(zipped).first << std::endl;   // 4
-    std::cout << std::get<1>(zipped).first << std::endl;   // "hi"
-    std::cout << std::get<0>(zipped).second << std::endl;  // a
-    std::cout << std::get<1>(zipped).second << std::endl;  // false
+    std::cout << std::get<0>(zipped).first << " " << std::get<1>(zipped).first << " " << std::get<0>(zipped).second << " " << std::get<1>(zipped).second << std::endl;
 
     auto unzipped = ndo::unzip(zipped);
 
     std::cout << "UNZIPPED\n";
-    std::cout << std::get<0>(unzipped) << std::endl;
-    std::cout << std::get<1>(unzipped) << std::endl;
-    std::cout << std::get<2>(unzipped) << std::endl;
-    std::cout << std::get<3>(unzipped) << std::endl;
+    std::cout << std::get<0>(unzipped) << " " << std::get<1>(unzipped) << " " << std::get<2>(unzipped) << " " << std::get<3>(unzipped) << std::endl;
 
     auto fzip = ndo::flat_zip(t1, t2);
 
     std::cout << "FLAT ZIPPED\n";
-    std::cout << std::get<0>(fzip) << std::endl;  // 4
-    std::cout << std::get<1>(fzip) << std::endl;  // a
-    std::cout << std::get<2>(fzip) << std::endl;  // "hi"
-    std::cout << std::get<3>(fzip) << std::endl;  // false
+    std::cout << std::get<0>(fzip) << " " << std::get<1>(fzip) << " " << std::get<2>(fzip) << " " << std::get<3>(fzip) << std::endl;
+
+    std::cout << "\n.\n.\n.END ZIP" << std::endl;
 
     auto v3 = ndo::find_if(vec, [](int x) { return x > 2; });
 

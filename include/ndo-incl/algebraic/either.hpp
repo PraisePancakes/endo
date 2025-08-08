@@ -60,6 +60,7 @@ class either {
     /// Assign from an error value.
     either& operator=(const Left& l) {
         left = l;
+        right = ndo::ndo_nothing;
         return *this;
     };
 
@@ -70,8 +71,10 @@ class either {
         return *this;
     };
 
-    /// Assign from a success value (does nothing; placeholder).
+    /// Assign from a success value.
     either& operator=(const Right& r) {
+        right = r;
+        left = ndo::ndo_nothing;
         return *this;
     };
 
