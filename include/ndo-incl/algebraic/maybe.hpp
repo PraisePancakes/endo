@@ -2,11 +2,8 @@
 #include <functional>
 #include <variant>
 
+#include "nothing.hpp"
 namespace ndo {
-
-struct ndo_null_t {};
-
-inline constexpr ndo_null_t ndo_nothing{};
 
 template <typename T>
 class maybe {
@@ -144,25 +141,4 @@ class maybe<ndo_null_t> {
         return maybe<ndo_null_t>();
     }
 };
-
-namespace internal {
-template <typename T>
-struct is_nothing_trait : std::false_type {};
-
-template <>
-struct is_nothing_trait<maybe<ndo_null_t>> : std::true_type {};
-
-template <typename T>
-struct is_maybe_trait : std::false_type {};
-
-template <typename T>
-struct is_maybe_trait<maybe<T>> : std::true_type {};
-}  // namespace internal
-
-template <typename T>
-concept is_maybe = internal::is_maybe_trait<std::decay_t<T>>::value;
-
-template <typename T>
-concept is_nothing = internal::is_nothing_trait<std::decay_t<T>>::value;
-
-};  // namespace ndo
+}  // namespace ndo
