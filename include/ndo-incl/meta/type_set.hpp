@@ -102,45 +102,51 @@ class [[nodiscard]] type_set {
         };
     };
 
-    using unique = internal::tuple_identity_to_multiset<decltype([]<std::size_t... i>(std::index_sequence<i...>) mutable constexpr {
-        return std::tuple_cat([nt = std::make_tuple(std::type_identity<Ts>{}...)]<std::size_t idx>(ndo::value<idx>) {
-            if constexpr (idx == 0) {
-                return std::make_tuple(std::get<0>(nt));
-            } else if constexpr (idx > 0 && idx < this_t::cardinality &&
-                                 !this_t::template contains_to<
-                                     idx, typename std::tuple_element_t<
-                                              idx, decltype(nt)>::type>) {
-                return std::make_tuple(std::get<idx>(nt));
-            } else {
-                return std::make_tuple();
-            }
-        }(ndo::value<i>{})...);
-    }(std::make_index_sequence<this_t::cardinality>{}))>::type;
+    using unique = internal::tuple_identity_to_multiset<
+        decltype([]<std::size_t... i>(std::index_sequence<i...>) mutable constexpr {
+            return std::tuple_cat(
+                [nt = std::make_tuple(std::type_identity<Ts>{}...)]<std::size_t idx>(ndo::value<idx>) {
+                    if constexpr (idx == 0) {
+                        return std::make_tuple(std::get<0>(nt));
+                    } else if constexpr (idx > 0 && idx < this_t::cardinality &&
+                                         !this_t::template contains_to<
+                                             idx, typename std::tuple_element_t<
+                                                      idx, decltype(nt)>::type>) {
+                        return std::make_tuple(std::get<idx>(nt));
+                    } else {
+                        return std::make_tuple();
+                    }
+                }(ndo::value<i>{})...);
+        }(std::make_index_sequence<this_t::cardinality>{}))>::type;
 
     // eczbeck dont get mad, i like this idea
     template <auto Cond>
-    using filter = internal::tuple_identity_to_multiset<decltype([]<std::size_t... i>(std::index_sequence<i...>) mutable constexpr {
-        return std::tuple_cat([nt = std::make_tuple(std::type_identity<Ts>{}...)]<std::size_t idx>(ndo::value<idx>) {
-            if constexpr (ndo::satisfies_it<Cond, typename std::tuple_element_t<
-                                                      idx, decltype(nt)>::type>) {
-                return std::make_tuple(std::get<idx>(nt));
-            } else {
-                return std::make_tuple();
-            }
-        }(ndo::value<i>{})...);
-    }(std::make_index_sequence<this_t::cardinality>{}))>::type;
+    using filter = internal::tuple_identity_to_multiset<
+        decltype([]<std::size_t... i>(std::index_sequence<i...>) mutable constexpr {
+            return std::tuple_cat(
+                [nt = std::make_tuple(std::type_identity<Ts>{}...)]<std::size_t idx>(ndo::value<idx>) {
+                    if constexpr (ndo::satisfies_it<Cond, typename std::tuple_element_t<
+                                                              idx, decltype(nt)>::type>) {
+                        return std::make_tuple(std::get<idx>(nt));
+                    } else {
+                        return std::make_tuple();
+                    }
+                }(ndo::value<i>{})...);
+        }(std::make_index_sequence<this_t::cardinality>{}))>::type;
 
     constexpr static bool is_unique = []() constexpr { return this_t::cardinality == this_t::unique::cardinality; }();
 
     template <std::size_t I>
-    using remove_at = internal::tuple_identity_to_multiset<decltype([]<std::size_t... i>(std::index_sequence<i...>) mutable constexpr {
-        return std::tuple_cat([nt = std::make_tuple(std::type_identity<Ts>{}...)]<std::size_t idx>(ndo::value<idx>) {
-            if constexpr (idx == I) {
-                return std::make_tuple();
-            } else {
-                return std::make_tuple(std::get<idx>(nt));
-            }
-        }(ndo::value<i>{})...);
-    }(std::make_index_sequence<this_t::cardinality>{}))>::type;
+    using remove_at = internal::tuple_identity_to_multiset<
+        decltype([]<std::size_t... i>(std::index_sequence<i...>) mutable constexpr {
+            return std::tuple_cat(
+                [nt = std::make_tuple(std::type_identity<Ts>{}...)]<std::size_t idx>(ndo::value<idx>) {
+                    if constexpr (idx == I) {
+                        return std::make_tuple();
+                    } else {
+                        return std::make_tuple(std::get<idx>(nt));
+                    }
+                }(ndo::value<i>{})...);
+        }(std::make_index_sequence<this_t::cardinality>{}))>::type;
 };
 };  // namespace ndo
