@@ -28,6 +28,14 @@ void test_transform() {
     std::cout << std::get<2>(unzipped) << std::endl;
     std::cout << std::get<3>(unzipped) << std::endl;
 
+    auto fzip = ndo::flat_zip(t1, t2);
+
+    std::cout << "FLAT ZIPPED\n";
+    std::cout << std::get<0>(fzip) << std::endl;  // 4
+    std::cout << std::get<1>(fzip) << std::endl;  // a
+    std::cout << std::get<2>(fzip) << std::endl;  // "hi"
+    std::cout << std::get<3>(fzip) << std::endl;  // false
+
     auto v3 = ndo::find_if(vec, [](int x) { return x > 2; });
 
     if (v3.has_value()) {
